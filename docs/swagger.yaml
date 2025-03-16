@@ -1,0 +1,181 @@
+basePath: /
+definitions:
+  models.PurchaseOrder:
+    properties:
+      currency:
+        type: string
+      customer:
+        type: string
+      customer_po:
+        type: string
+      delivery_date:
+        type: string
+      discount_amount:
+        type: integer
+      discount_percent:
+        type: integer
+      extend_list_price:
+        type: integer
+      extend_net_price:
+        type: integer
+      extend_unit_net_price:
+        type: integer
+      job_amount:
+        type: integer
+      job_id_no:
+        type: string
+      ordered:
+        type: integer
+      period_end:
+        type: string
+      period_start:
+        type: string
+      product_code:
+        type: string
+      product_description:
+        type: string
+      project_manager:
+        type: string
+      purchasing:
+        type: string
+      received:
+        type: integer
+      remain:
+        type: integer
+      sales_team:
+        type: string
+      status:
+        type: string
+      unit_list_price:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: API for processing Excel order data
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Excel Order API
+  version: "1.0"
+paths:
+  /purchaseorders:
+    get:
+      description: Retrieves a paginated list of purchase orders with optional search
+      parameters:
+      - description: Page number
+        in: query
+        name: pageNo
+        required: true
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: Search query
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response with list and metadata
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request - invalid query parameters
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get list of purchase orders
+      tags:
+      - purchaseorders
+    post:
+      consumes:
+      - application/json
+      description: Creates new purchase orders and saves them to MongoDB
+      parameters:
+      - description: List of purchase orders to create
+        in: body
+        name: orders
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.PurchaseOrder'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successful response
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request - invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create purchase orders
+      tags:
+      - purchaseorders
+  /purchaseorders/import:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Retrieves purchase order data from an uploaded Excel file and returns
+        it in JSON format
+      parameters:
+      - description: Excel file containing purchase order data
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.PurchaseOrder'
+              type: array
+            type: object
+        "400":
+          description: Bad request - missing or invalid file
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Import purchase orders from Excel file
+      tags:
+      - purchaseorders
+swagger: "2.0"
