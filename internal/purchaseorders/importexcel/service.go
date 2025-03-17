@@ -10,15 +10,15 @@ type IService interface {
 }
 
 type Service struct {
-	repo IRepository
+	Repository IRepository
 }
 
 func NewService() IService {
 	return &Service{
-		repo: NewRepository(),
+		Repository: NewRepository(),
 	}
 }
 
 func (s *Service) GetOrders(file multipart.File) ([]models.PurchaseOrder, error) {
-	return s.repo.GetOrdersFromExcel(file)
+	return s.Repository.GetOrdersFromExcel(file)
 }
