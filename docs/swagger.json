@@ -189,6 +189,49 @@
                     }
                 }
             }
+        },
+        "/purchaseorders/import-network": {
+            "get": {
+                "description": "Retrieves purchase order data from an Excel file located on a fixed network share path",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "purchaseorders"
+                ],
+                "summary": "Import purchase orders from Excel file on network share",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter orders by Job ID No",
+                        "name": "job_id_no",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.PurchaseOrder"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -10,14 +10,19 @@ func StringOrNil(s string) *string {
 	return &s
 }
 
-// IntOrNil returns a pointer to the integer if the string is a valid non-zero number, otherwise nil.
+// IntOrNil returns a pointer to the integer if the string is a valid number, otherwise nil.
 func IntOrNil(s string) *int {
 	if s == "" {
 		return nil
 	}
 	value, err := strconv.Atoi(s)
-	if err != nil || value == 0 {
+	if err != nil {
 		return nil
 	}
 	return &value
+}
+
+// IntPtrFromInt returns a pointer to the integer.
+func IntPtrFromInt(i int) *int {
+	return &i
 }

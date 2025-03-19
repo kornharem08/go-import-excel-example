@@ -11,6 +11,7 @@ func RegisterRoutePurchaseOrder(r *gin.Engine, dbconn mong.IConnect) {
 	handler := purchaseorderhandler.NewHandler(dbconn)
 	group := r.Group("/purchaseorders")
 	group.POST("/import", handler.GetOrders)
+	group.GET("/import-network", handler.GetOrdersFromNetworkPath)
 	group.POST("", handler.CreatePurchaseOrder)
 	group.GET("", handler.GetList)
 }

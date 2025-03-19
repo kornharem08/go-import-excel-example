@@ -14,16 +14,19 @@ type IHandler interface {
 	GetOrders(c *gin.Context)
 	CreatePurchaseOrder(c *gin.Context)
 	GetList(c *gin.Context)
+	GetOrdersFromNetworkPath(c *gin.Context)
 }
 
 type Handler struct {
 	ImportExcelservice   importexcel.IService
+	NetworkPathService   importexcel.INetworkPathService
 	PurchaseOrderService purchaseorders.IService
 }
 
 func NewHandler(dbconn mong.IConnect) IHandler {
 	return &Handler{
 		ImportExcelservice:   importexcel.NewService(),
+		NetworkPathService:   importexcel.NewNetworkPathService(),
 		PurchaseOrderService: purchaseorders.NewService(dbconn),
 	}
 }
@@ -136,4 +139,30 @@ func (h *Handler) GetList(c *gin.Context) {
 		"page":     query.PageNo,
 		"pageSize": query.PageSize,
 	})
+}
+
+// GetOrdersFromNetworkPath godoc
+// @Summary Import purchase orders from Excel file on network share
+// @Description Retrieves purchase order data from an Excel file located on a fixed network share path
+// @Tags purchaseorders
+// @Produce json
+// @Param job_id_no query string false "Filter orders by Job ID No"
+// @Success 200 {object} map[string][]models.PurchaseOrder "Successful response"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /purchaseorders/import-network [get]
+func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
+	// Use the fixed network path
+	filePath := `\\DESKTOP-IPS8S80\Shareing\Purchase Record 2023 ตัวอย่าง.xlsx`
+
+	// Get job_id_no filter from query parameters
+	jobIDNo := c.Query("job_id_no")
+
+	// Pass the file path and filter to the service
+	orders, err := h.NetworkPathService.GetOrdersFromPath(filePath, jobIDNo)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": orders})
 }

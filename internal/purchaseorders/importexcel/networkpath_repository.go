@@ -1,56 +1,48 @@
 package importexcel
 
 import (
-	"encoding/json"
 	"fmt"
-	"mime/multipart"
-
 	"purchase-record/internal/models"
 	"purchase-record/internal/purchaseorders/utils"
 
 	"github.com/xuri/excelize/v2"
 )
 
-type IRepository interface {
-	GetOrdersFromExcel(file multipart.File) ([]models.PurchaseOrder, error)
+type INetworkPathRepository interface {
+	GetOrdersFromNetworkPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error)
 }
 
-type Repository struct{}
+type NetworkPathRepository struct{}
 
-func NewRepository() IRepository {
-	return &Repository{}
+func NewNetworkPathRepository() INetworkPathRepository {
+	return &NetworkPathRepository{}
 }
 
-func (r *Repository) GetOrdersFromExcel(file multipart.File) ([]models.PurchaseOrder, error) {
-	f, err := excelize.OpenReader(file)
+func (r *NetworkPathRepository) GetOrdersFromNetworkPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error) {
+	// Open the Excel file directly from the network path
+	f, err := excelize.OpenFile(filePath)
 	if err != nil {
-		return nil, err
+		return []models.PurchaseOrder{}, fmt.Errorf("failed to open Excel file at path '%s': %w", filePath, err)
+	}
+	defer f.Close()
+
+	// Get all sheets
+	sheets := f.GetSheetList()
+	if len(sheets) == 0 {
+		return []models.PurchaseOrder{}, fmt.Errorf("no sheets found in Excel file")
 	}
 
-	rows, err := f.GetRows("Sheet1")
+	// Use first sheet by default
+	sheetName := sheets[0]
+
+	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		return nil, err
-	}
-
-	// Debug: Print total number of rows
-	fmt.Printf("Total rows in Excel: %d\n", len(rows))
-
-	// Debug: Print header row
-	if len(rows) > 0 {
-		fmt.Printf("Header row: %v\n", rows[0])
+		return []models.PurchaseOrder{}, fmt.Errorf("failed to read rows from sheet '%s': %w", sheetName, err)
 	}
 
 	var orders []models.PurchaseOrder
 	for i, row := range rows {
-		// Skip empty rows
-		if len(row) == 0 {
-			fmt.Printf("Skipping empty row %d\n", i)
-			continue
-		}
-
-		// Skip header row (first row)
-		if i == 0 {
-			fmt.Printf("Skipping header row: %v\n", row)
+		if i < 2 { // Skip header rows
 			continue
 		}
 
@@ -59,13 +51,9 @@ func (r *Repository) GetOrdersFromExcel(file multipart.File) ([]models.PurchaseO
 			row = append(row, "")
 		}
 
-		// Debug: Print raw row data
-		fmt.Printf("Processing row %d: %v\n", i, row)
-
-		// Debug: Print individual cell values
-		fmt.Printf("Row %d cells:\n", i)
-		for j, cell := range row {
-			fmt.Printf("  Cell[%d]: '%s'\n", j, cell)
+		// Apply job_id_no filter if provided
+		if jobIDNo != "" && row[0] != jobIDNo {
+			continue
 		}
 
 		order := models.PurchaseOrder{
@@ -93,13 +81,12 @@ func (r *Repository) GetOrdersFromExcel(file multipart.File) ([]models.PurchaseO
 			DeliveryDate:       utils.StringOrNil(row[52]),
 			Status:             utils.StringOrNil(row[53]),
 		}
-
-		// Debug: Print the created order
-		orderJSON, _ := json.Marshal(order)
-		fmt.Printf("Created order: %s\n", string(orderJSON))
-
 		orders = append(orders, order)
 	}
 
-	return orders, nil
+	if orders == nil { return []models.PurchaseOrder{}, nil }; return orders, nil
 }
+
+
+
+

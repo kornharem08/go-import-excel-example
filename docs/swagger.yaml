@@ -178,4 +178,33 @@ paths:
       summary: Import purchase orders from Excel file
       tags:
       - purchaseorders
+  /purchaseorders/import-network:
+    get:
+      description: Retrieves purchase order data from an Excel file located on a fixed
+        network share path
+      parameters:
+      - description: Filter orders by Job ID No
+        in: query
+        name: job_id_no
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.PurchaseOrder'
+              type: array
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Import purchase orders from Excel file on network share
+      tags:
+      - purchaseorders
 swagger: "2.0"
