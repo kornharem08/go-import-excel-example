@@ -4,3 +4,4 @@ export MONGODB_PURCHASE_ORDER_COLLECTION_NAME=purchase_order
 
 run-api:
 	go run ./cmd/main.go
+

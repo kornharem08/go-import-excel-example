@@ -152,7 +152,7 @@ func (h *Handler) GetList(c *gin.Context) {
 // @Router /purchaseorders/import-network [get]
 func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 	// Use the fixed network path
-	filePath := `\\DESKTOP-IPS8S80\Shareing\Purchase Record 2023 ตัวอย่าง.xlsx`
+	filePath := `\\DESKTOP-IPS8S80\Shareing\Purchase Record 2024_for Taste.xlsx`
 
 	// Get job_id_no filter from query parameters
 	jobIDNo := c.Query("job_id_no")

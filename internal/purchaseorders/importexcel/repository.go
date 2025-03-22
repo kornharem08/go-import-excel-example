@@ -55,7 +55,7 @@ func (r *Repository) GetOrdersFromExcel(file multipart.File) ([]models.PurchaseO
 		}
 
 		// Ensure row has enough columns, pad with empty strings if needed
-		for len(row) <= 53 {
+		for len(row) <= 56 {
 			row = append(row, "")
 		}
 
@@ -70,28 +70,24 @@ func (r *Repository) GetOrdersFromExcel(file multipart.File) ([]models.PurchaseO
 
 		order := models.PurchaseOrder{
 			JobIDNo:            utils.StringOrNil(row[0]),
-			SalesTeam:          utils.StringOrNil(row[1]),
-			ProjectManager:     utils.StringOrNil(row[2]),
-			Purchasing:         utils.StringOrNil(row[3]),
-			CustomerPO:         utils.StringOrNil(row[4]),
-			JobAmount:          utils.IntOrNil(row[5]),
-			PeriodStart:        utils.StringOrNil(row[6]),
-			PeriodEnd:          utils.StringOrNil(row[7]),
-			Customer:           utils.StringOrNil(row[8]),
-			ProductCode:        utils.StringOrNil(row[9]),
-			ProductDescription: utils.StringOrNil(row[10]),
-			Ordered:            utils.IntOrNil(row[11]),
-			Received:           utils.IntOrNil(row[12]),
-			Remain:             utils.IntOrNil(row[13]),
-			Currency:           utils.StringOrNil(row[14]),
-			UnitListPrice:      utils.IntOrNil(row[15]),
-			ExtendListPrice:    utils.IntOrNil(row[16]),
-			DiscountPercent:    utils.IntOrNil(row[17]),
-			DiscountAmount:     utils.IntOrNil(row[18]),
-			ExtendUnitNetPrice: utils.IntOrNil(row[19]),
-			ExtendNetPrice:     utils.IntOrNil(row[20]),
-			DeliveryDate:       utils.StringOrNil(row[52]),
-			Status:             utils.StringOrNil(row[53]),
+			Type:               utils.StringOrNil(row[1]),
+			SalesTeam:          utils.StringOrNil(row[2]),
+			ProjectManager:     utils.StringOrNil(row[3]),
+			Customer:           utils.StringOrNil(row[9]),
+			ProductCode:        utils.StringOrNil(row[10]),
+			ProductDescription: utils.StringOrNil(row[11]),
+			Ordered:            utils.IntOrNil(row[12]),
+			Received:           utils.IntOrNil(row[13]),
+			Remain:             utils.IntOrNil(row[14]),
+			PR:                 utils.StringOrNil(row[25]),
+			PRDate:             utils.StringOrNil(row[26]),
+			PO:                 utils.StringOrNil(row[27]),
+			PODate:             utils.StringOrNil(row[28]),
+			Distribution:       utils.StringOrNil(row[31]),
+			PaymentTerm:        utils.StringOrNil(row[32]),
+			RequestDate:        utils.StringOrNil(row[35]),
+			DeliveryDate:       utils.StringOrNil(row[51]),
+			Status:             utils.StringOrNil(row[55]),
 		}
 
 		// Debug: Print the created order

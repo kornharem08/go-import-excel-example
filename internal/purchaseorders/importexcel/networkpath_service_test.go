@@ -31,26 +31,22 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 					Return([]models.PurchaseOrder{
 						{
 							JobIDNo:            stringPtr("123"),
+							Type:               stringPtr("Standard"),
 							SalesTeam:          stringPtr("Team A"),
 							ProjectManager:     stringPtr("John"),
-							Purchasing:         stringPtr("Jane"),
-							CustomerPO:         stringPtr("PO123"),
-							JobAmount:          intPtr(1000),
-							PeriodStart:        stringPtr("2024-01-01"),
-							PeriodEnd:          stringPtr("2024-12-31"),
 							Customer:           stringPtr("Customer A"),
 							ProductCode:        stringPtr("PROD123"),
 							ProductDescription: stringPtr("Test Product"),
 							Ordered:            intPtr(100),
 							Received:           intPtr(50),
 							Remain:             intPtr(50),
-							Currency:           stringPtr("USD"),
-							UnitListPrice:      intPtr(10),
-							ExtendListPrice:    intPtr(1000),
-							DiscountPercent:    intPtr(5),
-							DiscountAmount:     intPtr(50),
-							ExtendUnitNetPrice: intPtr(9),
-							ExtendNetPrice:     intPtr(900),
+							PR:                 stringPtr("PR123"),
+							PRDate:             stringPtr("2024-01-01"),
+							PO:                 stringPtr("PO123"),
+							PODate:             stringPtr("2024-01-15"),
+							Distribution:       stringPtr("Dept1"),
+							PaymentTerm:        stringPtr("Net 30"),
+							RequestDate:        stringPtr("2024-01-01"),
 							DeliveryDate:       stringPtr("2024-06-30"),
 							Status:             stringPtr("Active"),
 						},
@@ -59,26 +55,22 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			expectedOrders: []models.PurchaseOrder{
 				{
 					JobIDNo:            stringPtr("123"),
+					Type:               stringPtr("Standard"),
 					SalesTeam:          stringPtr("Team A"),
 					ProjectManager:     stringPtr("John"),
-					Purchasing:         stringPtr("Jane"),
-					CustomerPO:         stringPtr("PO123"),
-					JobAmount:          intPtr(1000),
-					PeriodStart:        stringPtr("2024-01-01"),
-					PeriodEnd:          stringPtr("2024-12-31"),
 					Customer:           stringPtr("Customer A"),
 					ProductCode:        stringPtr("PROD123"),
 					ProductDescription: stringPtr("Test Product"),
 					Ordered:            intPtr(100),
 					Received:           intPtr(50),
 					Remain:             intPtr(50),
-					Currency:           stringPtr("USD"),
-					UnitListPrice:      intPtr(10),
-					ExtendListPrice:    intPtr(1000),
-					DiscountPercent:    intPtr(5),
-					DiscountAmount:     intPtr(50),
-					ExtendUnitNetPrice: intPtr(9),
-					ExtendNetPrice:     intPtr(900),
+					PR:                 stringPtr("PR123"),
+					PRDate:             stringPtr("2024-01-01"),
+					PO:                 stringPtr("PO123"),
+					PODate:             stringPtr("2024-01-15"),
+					Distribution:       stringPtr("Dept1"),
+					PaymentTerm:        stringPtr("Net 30"),
+					RequestDate:        stringPtr("2024-01-01"),
 					DeliveryDate:       stringPtr("2024-06-30"),
 					Status:             stringPtr("Active"),
 				},
@@ -96,26 +88,22 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 					Return([]models.PurchaseOrder{
 						{
 							JobIDNo:            stringPtr("123"),
+							Type:               stringPtr("Standard"),
 							SalesTeam:          stringPtr("Team A"),
 							ProjectManager:     stringPtr("John"),
-							Purchasing:         stringPtr("Jane"),
-							CustomerPO:         stringPtr("PO123"),
-							JobAmount:          intPtr(1000),
-							PeriodStart:        stringPtr("2024-01-01"),
-							PeriodEnd:          stringPtr("2024-12-31"),
 							Customer:           stringPtr("Customer A"),
 							ProductCode:        stringPtr("PROD123"),
 							ProductDescription: stringPtr("Test Product"),
 							Ordered:            intPtr(100),
 							Received:           intPtr(50),
 							Remain:             intPtr(50),
-							Currency:           stringPtr("USD"),
-							UnitListPrice:      intPtr(10),
-							ExtendListPrice:    intPtr(1000),
-							DiscountPercent:    intPtr(5),
-							DiscountAmount:     intPtr(50),
-							ExtendUnitNetPrice: intPtr(9),
-							ExtendNetPrice:     intPtr(900),
+							PR:                 stringPtr("PR123"),
+							PRDate:             stringPtr("2024-01-01"),
+							PO:                 stringPtr("PO123"),
+							PODate:             stringPtr("2024-01-15"),
+							Distribution:       stringPtr("Dept1"),
+							PaymentTerm:        stringPtr("Net 30"),
+							RequestDate:        stringPtr("2024-01-01"),
 							DeliveryDate:       stringPtr("2024-06-30"),
 							Status:             stringPtr("Active"),
 						},
@@ -124,26 +112,22 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			expectedOrders: []models.PurchaseOrder{
 				{
 					JobIDNo:            stringPtr("123"),
+					Type:               stringPtr("Standard"),
 					SalesTeam:          stringPtr("Team A"),
 					ProjectManager:     stringPtr("John"),
-					Purchasing:         stringPtr("Jane"),
-					CustomerPO:         stringPtr("PO123"),
-					JobAmount:          intPtr(1000),
-					PeriodStart:        stringPtr("2024-01-01"),
-					PeriodEnd:          stringPtr("2024-12-31"),
 					Customer:           stringPtr("Customer A"),
 					ProductCode:        stringPtr("PROD123"),
 					ProductDescription: stringPtr("Test Product"),
 					Ordered:            intPtr(100),
 					Received:           intPtr(50),
 					Remain:             intPtr(50),
-					Currency:           stringPtr("USD"),
-					UnitListPrice:      intPtr(10),
-					ExtendListPrice:    intPtr(1000),
-					DiscountPercent:    intPtr(5),
-					DiscountAmount:     intPtr(50),
-					ExtendUnitNetPrice: intPtr(9),
-					ExtendNetPrice:     intPtr(900),
+					PR:                 stringPtr("PR123"),
+					PRDate:             stringPtr("2024-01-01"),
+					PO:                 stringPtr("PO123"),
+					PODate:             stringPtr("2024-01-15"),
+					Distribution:       stringPtr("Dept1"),
+					PaymentTerm:        stringPtr("Net 30"),
+					RequestDate:        stringPtr("2024-01-01"),
 					DeliveryDate:       stringPtr("2024-06-30"),
 					Status:             stringPtr("Active"),
 				},
@@ -161,7 +145,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 					Return([]models.PurchaseOrder{
 						{
 							JobIDNo:            stringPtr("123"),
-							Purchasing:         stringPtr("Jane"),
+							Type:               stringPtr("Standard"),
+							ProjectManager:     stringPtr("Jane"),
 							ProductDescription: stringPtr("Test Product"),
 							Status:             stringPtr("Active"),
 						},
@@ -170,7 +155,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			expectedOrders: []models.PurchaseOrder{
 				{
 					JobIDNo:            stringPtr("123"),
-					Purchasing:         stringPtr("Jane"),
+					Type:               stringPtr("Standard"),
+					ProjectManager:     stringPtr("Jane"),
 					ProductDescription: stringPtr("Test Product"),
 					Status:             stringPtr("Active"),
 				},
@@ -188,7 +174,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 					Return([]models.PurchaseOrder{
 						{
 							JobIDNo:            stringPtr("123"),
-							Purchasing:         stringPtr("Jane"),
+							Type:               stringPtr("Standard"),
+							ProjectManager:     stringPtr("Jane"),
 							ProductDescription: stringPtr("Test Product"),
 							Status:             stringPtr("Active"),
 						},
@@ -197,7 +184,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			expectedOrders: []models.PurchaseOrder{
 				{
 					JobIDNo:            stringPtr("123"),
-					Purchasing:         stringPtr("Jane"),
+					Type:               stringPtr("Standard"),
+					ProjectManager:     stringPtr("Jane"),
 					ProductDescription: stringPtr("Test Product"),
 					Status:             stringPtr("Active"),
 				},
@@ -215,7 +203,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 					Return([]models.PurchaseOrder{
 						{
 							JobIDNo:            stringPtr("123"),
-							Purchasing:         stringPtr("Jane"),
+							Type:               stringPtr("Standard"),
+							ProjectManager:     stringPtr("Jane"),
 							ProductDescription: stringPtr("Test Product"),
 							Status:             stringPtr("Active"),
 						},
@@ -224,7 +213,8 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			expectedOrders: []models.PurchaseOrder{
 				{
 					JobIDNo:            stringPtr("123"),
-					Purchasing:         stringPtr("Jane"),
+					Type:               stringPtr("Standard"),
+					ProjectManager:     stringPtr("Jane"),
 					ProductDescription: stringPtr("Test Product"),
 					Status:             stringPtr("Active"),
 				},
@@ -248,13 +238,11 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Create mock repository
-			mockRepo := mocks.NewINetworkPathRepository(t)
-			if tt.mockSetup != nil {
-				tt.mockSetup(mockRepo)
-			}
+			// Setup the mock repository
+			mockRepo := new(mocks.INetworkPathRepository)
+			tt.mockSetup(mockRepo)
 
-			// Create service with mock repository
+			// Create the service with the mock repository
 			service := &NetworkPathService{
 				Repository: mockRepo,
 			}
@@ -262,7 +250,7 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			// Call the method
 			orders, err := service.GetOrdersFromPath(tt.filePath, tt.jobIDNo)
 
-			// Assert results
+			// Assert the result
 			if tt.expectedError != nil {
 				assert.Error(t, err)
 				assert.Equal(t, tt.expectedError.Error(), err.Error())
@@ -272,13 +260,13 @@ func TestNetworkPathService_GetOrdersFromPath(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedOrders, orders)
 
-			// Verify that all expected mock calls were made
+			// Verify that all expectations were met
 			mockRepo.AssertExpectations(t)
 		})
 	}
 }
 
-// Helper functions for creating pointers
+// Helper functions to create pointers for string and int values
 func stringPtr(s string) *string {
 	return &s
 }
