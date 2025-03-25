@@ -32,7 +32,7 @@ func NewHandler() IHandler {
 // @Router /purchaseorders [get]
 func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 	// Use the fixed network path
-	filePath := `C:\Users\sooo\Desktop\Purchase Record 2024_for Taste.xlsx`
+	filePath := ``
 
 	// Get job_id_no filter from query parameters
 	jobIDNo := c.Query("job_id_no")
