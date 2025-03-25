@@ -19,179 +19,6 @@
     "paths": {
         "/purchaseorders": {
             "get": {
-                "description": "Retrieves a paginated list of purchase orders with optional search",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "purchaseorders"
-                ],
-                "summary": "Get list of purchase orders",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "pageNo",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items per page",
-                        "name": "pageSize",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search query",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response with list and metadata",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request - invalid query parameters",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Creates new purchase orders and saves them to MongoDB",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "purchaseorders"
-                ],
-                "summary": "Create purchase orders",
-                "parameters": [
-                    {
-                        "description": "List of purchase orders to create",
-                        "name": "orders",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.PurchaseOrder"
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request - invalid input",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/purchaseorders/import": {
-            "post": {
-                "description": "Retrieves purchase order data from an uploaded Excel file and returns it in JSON format",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "purchaseorders"
-                ],
-                "summary": "Import purchase orders from Excel file",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Excel file containing purchase order data",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/models.PurchaseOrder"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request - missing or invalid file",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/purchaseorders/import-network": {
-            "get": {
                 "description": "Retrieves purchase order data from an Excel file located on a fixed network share path",
                 "produces": [
                     "application/json"
@@ -238,35 +65,14 @@
         "models.PurchaseOrder": {
             "type": "object",
             "properties": {
-                "currency": {
-                    "type": "string"
-                },
                 "customer": {
-                    "type": "string"
-                },
-                "customer_po": {
                     "type": "string"
                 },
                 "delivery_date": {
                     "type": "string"
                 },
-                "discount_amount": {
-                    "type": "integer"
-                },
-                "discount_percent": {
-                    "type": "integer"
-                },
-                "extend_list_price": {
-                    "type": "integer"
-                },
-                "extend_net_price": {
-                    "type": "integer"
-                },
-                "extend_unit_net_price": {
-                    "type": "integer"
-                },
-                "job_amount": {
-                    "type": "integer"
+                "distribution": {
+                    "type": "string"
                 },
                 "job_id_no": {
                     "type": "string"
@@ -274,10 +80,19 @@
                 "ordered": {
                     "type": "integer"
                 },
-                "period_end": {
+                "payment_term": {
                     "type": "string"
                 },
-                "period_start": {
+                "po": {
+                    "type": "string"
+                },
+                "po_date": {
+                    "type": "string"
+                },
+                "pr": {
+                    "type": "string"
+                },
+                "pr_date": {
                     "type": "string"
                 },
                 "product_code": {
@@ -289,14 +104,14 @@
                 "project_manager": {
                     "type": "string"
                 },
-                "purchasing": {
-                    "type": "string"
-                },
                 "received": {
                     "type": "integer"
                 },
                 "remain": {
                     "type": "integer"
+                },
+                "request_date": {
+                    "type": "string"
                 },
                 "sales_team": {
                     "type": "string"
@@ -304,8 +119,8 @@
                 "status": {
                     "type": "string"
                 },
-                "unit_list_price": {
-                    "type": "integer"
+                "type": {
+                    "type": "string"
                 }
             }
         }

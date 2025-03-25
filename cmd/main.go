@@ -1,11 +1,7 @@
 package main
 
 import (
-	"log"
 	_ "purchase-record/docs"
-	"purchase-record/internal/config"
-	"purchase-record/internal/database/environ"
-	"purchase-record/internal/database/mong"
 	"purchase-record/internal/router"
 
 	"github.com/gin-contrib/cors"
@@ -26,25 +22,12 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
-	cfg := environ.Load[config.Config]()
-	if cfg.MongoDBDatabase == "" {
-		log.Fatal("database name must be present")
-	}
-
-	dbconn, err := mong.New(cfg.MongoDBDatabase)
-	// New database connection
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Ensure connection close
-	defer dbconn.Close()
 
 	r := gin.Default()
 	r.Use(cors.Default())
 
 	// Routes
-	router.RegisterRoutePurchaseOrder(r, dbconn)
+	router.RegisterRoutePurchaseOrder(r)
 	// Swagger endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

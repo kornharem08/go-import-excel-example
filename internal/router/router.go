@@ -1,17 +1,14 @@
 package router
 
 import (
-	"purchase-record/internal/database/mong"
 	"purchase-record/internal/handlers/purchaseorderhandler"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutePurchaseOrder(r *gin.Engine, dbconn mong.IConnect) {
-	handler := purchaseorderhandler.NewHandler(dbconn)
+func RegisterRoutePurchaseOrder(r *gin.Engine) {
+	handler := purchaseorderhandler.NewHandler()
 	group := r.Group("/purchaseorders")
-	group.POST("/import", handler.GetOrders)
 	group.GET("", handler.GetOrdersFromNetworkPath)
-	group.POST("", handler.CreatePurchaseOrder)
-	group.GET("import-network", handler.GetList)
+
 }

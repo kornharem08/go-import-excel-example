@@ -2,33 +2,25 @@ basePath: /
 definitions:
   models.PurchaseOrder:
     properties:
-      currency:
-        type: string
       customer:
-        type: string
-      customer_po:
         type: string
       delivery_date:
         type: string
-      discount_amount:
-        type: integer
-      discount_percent:
-        type: integer
-      extend_list_price:
-        type: integer
-      extend_net_price:
-        type: integer
-      extend_unit_net_price:
-        type: integer
-      job_amount:
-        type: integer
+      distribution:
+        type: string
       job_id_no:
         type: string
       ordered:
         type: integer
-      period_end:
+      payment_term:
         type: string
-      period_start:
+      po:
+        type: string
+      po_date:
+        type: string
+      pr:
+        type: string
+      pr_date:
         type: string
       product_code:
         type: string
@@ -36,18 +28,18 @@ definitions:
         type: string
       project_manager:
         type: string
-      purchasing:
-        type: string
       received:
         type: integer
       remain:
         type: integer
+      request_date:
+        type: string
       sales_team:
         type: string
       status:
         type: string
-      unit_list_price:
-        type: integer
+      type:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -63,122 +55,6 @@ info:
   version: "1.0"
 paths:
   /purchaseorders:
-    get:
-      description: Retrieves a paginated list of purchase orders with optional search
-      parameters:
-      - description: Page number
-        in: query
-        name: pageNo
-        required: true
-        type: integer
-      - description: Number of items per page
-        in: query
-        name: pageSize
-        required: true
-        type: integer
-      - description: Search query
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successful response with list and metadata
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Bad request - invalid query parameters
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get list of purchase orders
-      tags:
-      - purchaseorders
-    post:
-      consumes:
-      - application/json
-      description: Creates new purchase orders and saves them to MongoDB
-      parameters:
-      - description: List of purchase orders to create
-        in: body
-        name: orders
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/models.PurchaseOrder'
-          type: array
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Successful response
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad request - invalid input
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Create purchase orders
-      tags:
-      - purchaseorders
-  /purchaseorders/import:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Retrieves purchase order data from an uploaded Excel file and returns
-        it in JSON format
-      parameters:
-      - description: Excel file containing purchase order data
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successful response
-          schema:
-            additionalProperties:
-              items:
-                $ref: '#/definitions/models.PurchaseOrder'
-              type: array
-            type: object
-        "400":
-          description: Bad request - missing or invalid file
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Import purchase orders from Excel file
-      tags:
-      - purchaseorders
-  /purchaseorders/import-network:
     get:
       description: Retrieves purchase order data from an Excel file located on a fixed
         network share path
