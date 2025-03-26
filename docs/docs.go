@@ -26,6 +26,9 @@ const docTemplate = `{
         "/purchaseorders": {
             "get": {
                 "description": "Retrieves purchase order data from an Excel file located on a fixed network share path",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -43,7 +46,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response",
+                        "description": "OK",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -55,7 +58,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -144,7 +147,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "10.10.5:8080",
 	BasePath:         "/",
 	Schemes:          []string{"http", "https"},
 	Title:            "Excel Order API",

@@ -25,10 +25,11 @@ func NewHandler() IHandler {
 // @Summary Import purchase orders from Excel file on network share
 // @Description Retrieves purchase order data from an Excel file located on a fixed network share path
 // @Tags purchaseorders
+// @Accept json
 // @Produce json
 // @Param job_id_no query string false "Filter orders by Job ID No"
-// @Success 200 {object} map[string][]models.PurchaseOrder "Successful response"
-// @Failure 500 {object} map[string]string "Internal server error"
+// @Success 200 {object} map[string][]models.PurchaseOrder
+// @Failure 500 {object} map[string]string
 // @Router /purchaseorders [get]
 func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 	// Use the fixed network path

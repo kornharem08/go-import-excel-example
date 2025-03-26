@@ -18,12 +18,15 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "10.10.5:8080",
     "basePath": "/",
     "paths": {
         "/purchaseorders": {
             "get": {
                 "description": "Retrieves purchase order data from an Excel file located on a fixed network share path",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -41,7 +44,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response",
+                        "description": "OK",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -53,7 +56,7 @@
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
