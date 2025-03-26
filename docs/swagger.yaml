@@ -83,4 +83,13 @@ paths:
       summary: Import purchase orders from Excel file on network share
       tags:
       - purchaseorders
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

@@ -21,6 +21,11 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:8080
 // @BasePath /
+// @schemes http https
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 func main() {
 
 	r := gin.Default()
@@ -35,7 +40,7 @@ func main() {
 
 	// Routes
 	router.RegisterRoutePurchaseOrder(r)
-	// Swagger endpoint
+	// Swagger endpoint with custom configuration
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run server
