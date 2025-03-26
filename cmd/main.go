@@ -24,7 +24,14 @@ import (
 func main() {
 
 	r := gin.Default()
-	r.Use(cors.Default())
+
+	// Configure CORS
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	config.AllowCredentials = true
+	r.Use(cors.New(config))
 
 	// Routes
 	router.RegisterRoutePurchaseOrder(r)
