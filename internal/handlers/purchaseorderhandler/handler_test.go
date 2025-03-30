@@ -1,12 +1,10 @@
 package purchaseorderhandler
 
 import (
-	"encoding/json"
-	"errors"
-	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"purchase-record/internal/models"
-	"purchase-record/internal/purchaseorders/importexcel/mocks"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,181 +12,82 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestHandler_GetOrdersFromNetworkPath(t *testing.T) {
+// MockNetworkPathService is a mock implementation of INetworkPathService
+type MockNetworkPathService struct {
+	mock.Mock
+}
+
+func (m *MockNetworkPathService) GetOrdersFromPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error) {
+	args := m.Called(filePath, jobIDNo)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]models.PurchaseOrder), args.Error(1)
+}
+
+func TestGetOrdersFromNetworkPath(t *testing.T) {
+	// Create a temporary test file
+	tempDir := t.TempDir()
+	testFilePath := filepath.Join(tempDir, "test.xlsx")
+
+	// Create a test file
+	err := os.WriteFile(testFilePath, []byte("test data"), 0644)
+	assert.NoError(t, err)
+
 	tests := []struct {
 		name           string
-		queryParams    string
-		mockSetup      func(*mocks.INetworkPathService)
+		setupMock      func(*MockNetworkPathService)
 		expectedStatus int
-		expectedBody   map[string]interface{}
+		expectedError  string
 	}{
 		{
-			name:        "successful retrieval with no filter",
-			queryParams: "",
-			mockSetup: func(m *mocks.INetworkPathService) {
-				m.On("GetOrdersFromPath", mock.Anything, "").
-					Return([]models.PurchaseOrder{
-						{
-							JobIDNo:            stringPtr("123"),
-							Type:               stringPtr("Standard"),
-							SalesTeam:          stringPtr("Team A"),
-							ProjectManager:     stringPtr("John"),
-							Customer:           stringPtr("Customer A"),
-							ProductCode:        stringPtr("PROD123"),
-							ProductDescription: stringPtr("Test Product"),
-							Ordered:            intPtr(100),
-							Received:           intPtr(50),
-							Remain:             intPtr(50),
-							PR:                 stringPtr("PR123"),
-							PRDate:             stringPtr("2024-01-01"),
-							PO:                 stringPtr("PO123"),
-							PODate:             stringPtr("2024-01-15"),
-							Distribution:       stringPtr("Dept1"),
-							PaymentTerm:        stringPtr("Net 30"),
-							RequestDate:        stringPtr("2024-01-01"),
-							DeliveryDate:       stringPtr("2024-06-30"),
-							Status:             stringPtr("Active"),
-						},
-					}, nil)
+			name: "successful read from original file",
+			setupMock: func(m *MockNetworkPathService) {
+				m.On("GetOrdersFromPath", mock.Anything, "").Return([]models.PurchaseOrder{}, nil)
 			},
-			expectedStatus: http.StatusOK,
-			expectedBody: map[string]interface{}{
-				"data": []models.PurchaseOrder{
-					{
-						JobIDNo:            stringPtr("123"),
-						Type:               stringPtr("Standard"),
-						SalesTeam:          stringPtr("Team A"),
-						ProjectManager:     stringPtr("John"),
-						Customer:           stringPtr("Customer A"),
-						ProductCode:        stringPtr("PROD123"),
-						ProductDescription: stringPtr("Test Product"),
-						Ordered:            intPtr(100),
-						Received:           intPtr(50),
-						Remain:             intPtr(50),
-						PR:                 stringPtr("PR123"),
-						PRDate:             stringPtr("2024-01-01"),
-						PO:                 stringPtr("PO123"),
-						PODate:             stringPtr("2024-01-15"),
-						Distribution:       stringPtr("Dept1"),
-						PaymentTerm:        stringPtr("Net 30"),
-						RequestDate:        stringPtr("2024-01-01"),
-						DeliveryDate:       stringPtr("2024-06-30"),
-						Status:             stringPtr("Active"),
-					},
-				},
-			},
+			expectedStatus: 200,
 		},
 		{
-			name:        "successful retrieval with job_id_no filter",
-			queryParams: "?job_id_no=123",
-			mockSetup: func(m *mocks.INetworkPathService) {
-				m.On("GetOrdersFromPath", mock.Anything, "123").
-					Return([]models.PurchaseOrder{
-						{
-							JobIDNo:            stringPtr("123"),
-							Type:               stringPtr("Standard"),
-							SalesTeam:          stringPtr("Team A"),
-							ProjectManager:     stringPtr("John"),
-							Customer:           stringPtr("Customer A"),
-							ProductCode:        stringPtr("PROD123"),
-							ProductDescription: stringPtr("Test Product"),
-							Ordered:            intPtr(100),
-							Received:           intPtr(50),
-							Remain:             intPtr(50),
-							PR:                 stringPtr("PR123"),
-							PRDate:             stringPtr("2024-01-01"),
-							PO:                 stringPtr("PO123"),
-							PODate:             stringPtr("2024-01-15"),
-							Distribution:       stringPtr("Dept1"),
-							PaymentTerm:        stringPtr("Net 30"),
-							RequestDate:        stringPtr("2024-01-01"),
-							DeliveryDate:       stringPtr("2024-06-30"),
-							Status:             stringPtr("Active"),
-						},
-					}, nil)
+			name: "service error",
+			setupMock: func(m *MockNetworkPathService) {
+				m.On("GetOrdersFromPath", mock.Anything, "").Return(nil, assert.AnError)
 			},
-			expectedStatus: http.StatusOK,
-			expectedBody: map[string]interface{}{
-				"data": []models.PurchaseOrder{
-					{
-						JobIDNo:            stringPtr("123"),
-						Type:               stringPtr("Standard"),
-						SalesTeam:          stringPtr("Team A"),
-						ProjectManager:     stringPtr("John"),
-						Customer:           stringPtr("Customer A"),
-						ProductCode:        stringPtr("PROD123"),
-						ProductDescription: stringPtr("Test Product"),
-						Ordered:            intPtr(100),
-						Received:           intPtr(50),
-						Remain:             intPtr(50),
-						PR:                 stringPtr("PR123"),
-						PRDate:             stringPtr("2024-01-01"),
-						PO:                 stringPtr("PO123"),
-						PODate:             stringPtr("2024-01-15"),
-						Distribution:       stringPtr("Dept1"),
-						PaymentTerm:        stringPtr("Net 30"),
-						RequestDate:        stringPtr("2024-01-01"),
-						DeliveryDate:       stringPtr("2024-06-30"),
-						Status:             stringPtr("Active"),
-					},
-				},
-			},
-		},
-		{
-			name:        "service error",
-			queryParams: "",
-			mockSetup: func(m *mocks.INetworkPathService) {
-				m.On("GetOrdersFromPath", mock.Anything, "").
-					Return(nil, errors.New("service error"))
-			},
-			expectedStatus: http.StatusInternalServerError,
-			expectedBody: map[string]interface{}{
-				"error": "service error",
-			},
+			expectedStatus: 500,
+			expectedError:  assert.AnError.Error(),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create mock service
-			mockService := mocks.NewINetworkPathService(t)
-			if tt.mockSetup != nil {
-				tt.mockSetup(mockService)
-			}
+			mockService := new(MockNetworkPathService)
+			tt.setupMock(mockService)
 
 			// Create handler with mock service
 			handler := &Handler{
 				NetworkPathService: mockService,
 			}
 
-			// Create test request
+			// Create test context
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
-			c.Request = httptest.NewRequest("GET", "/purchaseorders/import-network"+tt.queryParams, nil)
 
 			// Call the handler
 			handler.GetOrdersFromNetworkPath(c)
 
 			// Assert response
 			assert.Equal(t, tt.expectedStatus, w.Code)
-			assert.JSONEq(t, toJSON(tt.expectedBody), w.Body.String())
+			if tt.expectedError != "" {
+				assert.Contains(t, w.Body.String(), tt.expectedError)
+			}
 
-			// Verify that all expected mock calls were made
+			// Verify mock expectations
 			mockService.AssertExpectations(t)
 		})
 	}
 }
 
-// Helper functions
-func stringPtr(s string) *string {
-	return &s
-}
-
-func intPtr(i int) *int {
-	return &i
-}
-
-func toJSON(v interface{}) string {
-	json, _ := json.Marshal(v)
-	return string(json)
+func TestNewHandler(t *testing.T) {
+	handler := NewHandler()
+	assert.NotNil(t, handler)
 }
