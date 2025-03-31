@@ -1,7 +1,9 @@
 package main
 
 import (
-	_ "purchase-record/docs"
+	"fmt"
+	"purchase-record/config"
+	"purchase-record/docs"
 	"purchase-record/internal/router"
 
 	"github.com/gin-contrib/cors"
@@ -25,6 +27,15 @@ import (
 // @in header
 // @description Type "Bearer" followed by a space and JWT token.
 func main() {
+	// Initialize configuration
+	config.InitSwaggerConfig()
+
+	// Programmatically set swagger info
+	docs.SwaggerInfo.Title = config.CF.Swagger.Title
+	docs.SwaggerInfo.Description = config.CF.Swagger.Description
+	docs.SwaggerInfo.Version = config.CF.Swagger.Version
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s%s", config.CF.Swagger.Host, config.CF.Swagger.BaseURL)
+
 	r := gin.Default()
 
 	// Configure CORS
