@@ -55,7 +55,7 @@ info:
   version: "1.0"
 paths:
   /purchaseorders:
-    get:
+    post:
       consumes:
       - application/json
       description: Retrieves purchase order data from an Excel file located on a fixed
@@ -64,6 +64,10 @@ paths:
       - description: Filter orders by Job ID No
         in: query
         name: job_id_no
+        type: string
+      - description: Path to the Excel file
+        in: query
+        name: path
         type: string
       produces:
       - application/json
@@ -83,6 +87,34 @@ paths:
               type: string
             type: object
       summary: Import purchase orders from Excel file on network share
+      tags:
+      - purchaseorders
+  /purchaseorders/setting:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the path of the purchase order Excel file
+      parameters:
+      - description: Path to the settings Excel file
+        in: query
+        name: path
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get the path of the purchase order Excel file
       tags:
       - purchaseorders
 schemes:

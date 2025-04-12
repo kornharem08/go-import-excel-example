@@ -23,7 +23,7 @@ func InitSwaggerConfig() {
 		Title:       "Excel Order API",
 		Description: "API for processing Excel order data",
 		Version:     "1.0",
-		Host:        "10.10.50.5:8080",
+		Host:        "localhost:8080", //localhost:8080 or 10.10.50.5:8080,
 		BaseURL:     "",
 	}
 }

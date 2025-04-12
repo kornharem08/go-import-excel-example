@@ -9,6 +9,6 @@ import (
 func RegisterRoutePurchaseOrder(r *gin.Engine) {
 	handler := purchaseorderhandler.NewHandler()
 	group := r.Group("/purchaseorders")
-	group.GET("", handler.GetOrdersFromNetworkPath)
-
+	group.POST("", handler.GetOrdersFromNetworkPath)
+	group.GET("/setting", handler.GetSettingPath)
 }

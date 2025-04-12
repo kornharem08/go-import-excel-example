@@ -25,7 +25,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/purchaseorders": {
-            "get": {
+            "post": {
                 "description": "Retrieves purchase order data from an Excel file located on a fixed network share path",
                 "consumes": [
                     "application/json"
@@ -43,6 +43,12 @@ const docTemplate = `{
                         "description": "Filter orders by Job ID No",
                         "name": "job_id_no",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Path to the Excel file",
+                        "name": "path",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -55,6 +61,49 @@ const docTemplate = `{
                                 "items": {
                                     "$ref": "#/definitions/models.PurchaseOrder"
                                 }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/purchaseorders/setting": {
+            "get": {
+                "description": "Retrieves the path of the purchase order Excel file",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "purchaseorders"
+                ],
+                "summary": "Get the path of the purchase order Excel file",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Path to the settings Excel file",
+                        "name": "path",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
                             }
                         }
                     },

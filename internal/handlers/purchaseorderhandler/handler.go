@@ -11,15 +11,18 @@ import (
 
 type IHandler interface {
 	GetOrdersFromNetworkPath(c *gin.Context)
+	GetSettingPath(c *gin.Context)
 }
 
 type Handler struct {
 	NetworkPathService importexcel.INetworkPathService
+	SettingPathService importexcel.ISettingPathService
 }
 
 func NewHandler() IHandler {
 	return &Handler{
 		NetworkPathService: importexcel.NewNetworkPathService(),
+		SettingPathService: importexcel.NewSettingPathService(),
 	}
 }
 
@@ -30,12 +33,31 @@ func NewHandler() IHandler {
 // @Accept json
 // @Produce json
 // @Param job_id_no query string false "Filter orders by Job ID No"
+// @Param path query string false "Path to the Excel file"
 // @Success 200 {object} map[string][]models.PurchaseOrder
 // @Failure 500 {object} map[string]string
-// @Router /purchaseorders [get]
+// @Router /purchaseorders [post]
 func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
-	// Use the fixed network path
-	filePath := ``
+	// Try to get path from query parameters first
+	filePath := c.Query("path")
+
+	// If path is not in query, check the request body
+	if filePath == "" {
+		// Define a struct to bind the JSON body
+		var requestBody struct {
+			Path string `json:"path"`
+		}
+
+		// Try to bind the JSON body
+		if err := c.ShouldBindJSON(&requestBody); err == nil && requestBody.Path != "" {
+			filePath = requestBody.Path
+		}
+	}
+
+	if filePath == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Path is required"})
+		return
+	}
 
 	// First try to read from the original file path
 	_, err := os.Stat(filePath)
@@ -68,4 +90,32 @@ func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": orders})
+}
+
+// GetSettingPath godoc
+// @Summary Get the path of the purchase order Excel file
+// @Description Retrieves the path of the purchase order Excel file
+// @Tags purchaseorders
+// @Accept json
+// @Produce json
+// @Param path query string false "Path to the settings Excel file"
+// @Success 200 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /purchaseorders/setting [get]
+func (h *Handler) GetSettingPath(c *gin.Context) {
+	// Try to get path from query parameters first
+	filePath := c.Query("path")
+
+	// If path is not provided, use default path
+	if filePath == "" {
+		filePath = ``
+	}
+
+	settings, err := h.SettingPathService.GetSettingPath(filePath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get setting path: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": settings})
 }
