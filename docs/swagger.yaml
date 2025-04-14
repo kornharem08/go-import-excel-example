@@ -94,11 +94,6 @@ paths:
       consumes:
       - application/json
       description: Retrieves the path of the purchase order Excel file
-      parameters:
-      - description: Path to the settings Excel file
-        in: query
-        name: path
-        type: string
       produces:
       - application/json
       responses:

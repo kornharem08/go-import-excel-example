@@ -119,39 +119,28 @@ func TestNewHandler(t *testing.T) {
 }
 
 func TestGetSettingPath(t *testing.T) {
+	fixedPath := `/Users/tanakornpitakchaichan/Desktop/setting/setting/setting.xlsx`
+
 	tests := []struct {
 		name           string
 		setupMock      func(*MockSettingPathService)
-		providePath    bool
 		expectedStatus int
 		expectedError  string
 	}{
 		{
-			name: "successful with default path",
+			name: "successful retrieval",
 			setupMock: func(m *MockSettingPathService) {
-				m.On("GetSettingPath", mock.Anything).Return([]models.SettingExcelData{
+				m.On("GetSettingPath", fixedPath).Return([]models.SettingExcelData{
 					{Path: "test/path", Name: "Test"},
 				}, nil)
 			},
-			providePath:    false,
-			expectedStatus: 200,
-		},
-		{
-			name: "successful with provided path",
-			setupMock: func(m *MockSettingPathService) {
-				m.On("GetSettingPath", "custom/path.xlsx").Return([]models.SettingExcelData{
-					{Path: "test/path", Name: "Test"},
-				}, nil)
-			},
-			providePath:    true,
 			expectedStatus: 200,
 		},
 		{
 			name: "service error",
 			setupMock: func(m *MockSettingPathService) {
-				m.On("GetSettingPath", mock.Anything).Return(nil, assert.AnError)
+				m.On("GetSettingPath", fixedPath).Return(nil, assert.AnError)
 			},
-			providePath:    false,
 			expectedStatus: 500,
 			expectedError:  "Failed to get setting path: " + assert.AnError.Error(),
 		},
@@ -171,16 +160,7 @@ func TestGetSettingPath(t *testing.T) {
 			// Create test context
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
-
-			// Setup request with path if needed
-			if tt.providePath {
-				c.Request = httptest.NewRequest("GET", "/purchaseorders/setting", nil)
-				query := c.Request.URL.Query()
-				query.Add("path", "custom/path.xlsx")
-				c.Request.URL.RawQuery = query.Encode()
-			} else {
-				c.Request = httptest.NewRequest("GET", "/purchaseorders/setting", nil)
-			}
+			c.Request = httptest.NewRequest("GET", "/purchaseorders/setting", nil)
 
 			// Call the handler
 			handler.GetSettingPath(c)

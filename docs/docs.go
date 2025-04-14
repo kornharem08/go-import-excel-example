@@ -89,14 +89,6 @@ const docTemplate = `{
                     "purchaseorders"
                 ],
                 "summary": "Get the path of the purchase order Excel file",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Path to the settings Excel file",
-                        "name": "path",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",

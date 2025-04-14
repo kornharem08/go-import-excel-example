@@ -98,18 +98,12 @@ func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 // @Tags purchaseorders
 // @Accept json
 // @Produce json
-// @Param path query string false "Path to the settings Excel file"
 // @Success 200 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /purchaseorders/setting [get]
 func (h *Handler) GetSettingPath(c *gin.Context) {
-	// Try to get path from query parameters first
-	filePath := c.Query("path")
-
-	// If path is not provided, use default path
-	if filePath == "" {
-		filePath = ``
-	}
+	// Use a fixed path for settings
+	filePath := `/Users/tanakornpitakchaichan/Desktop/setting/setting/setting.xlsx`
 
 	settings, err := h.SettingPathService.GetSettingPath(filePath)
 	if err != nil {
