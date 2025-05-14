@@ -20,4 +20,5 @@ type PurchaseOrder struct {
 	RequestDate        *string `json:"request_date"`
 	DeliveryDate       *string `json:"delivery_date"`
 	Status             *string `json:"status"`
+	Remark             *string `json:"remark"`
 }

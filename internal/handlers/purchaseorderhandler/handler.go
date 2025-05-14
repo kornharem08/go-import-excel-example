@@ -103,7 +103,7 @@ func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 // @Router /purchaseorders/setting [get]
 func (h *Handler) GetSettingPath(c *gin.Context) {
 	// Use a fixed path for settings
-	filePath := `/Users/tanakornpitakchaichan/Desktop/setting/setting/setting.xlsx`
+	filePath := `C:\Users\sooo\Desktop\Excel\setting\setting.xlsx`
 
 	settings, err := h.SettingPathService.GetSettingPath(filePath)
 	if err != nil {

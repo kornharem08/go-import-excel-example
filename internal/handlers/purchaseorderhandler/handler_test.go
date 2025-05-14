@@ -119,8 +119,6 @@ func TestNewHandler(t *testing.T) {
 }
 
 func TestGetSettingPath(t *testing.T) {
-	fixedPath := `/Users/tanakornpitakchaichan/Desktop/setting/setting/setting.xlsx`
-
 	tests := []struct {
 		name           string
 		setupMock      func(*MockSettingPathService)
@@ -130,7 +128,7 @@ func TestGetSettingPath(t *testing.T) {
 		{
 			name: "successful retrieval",
 			setupMock: func(m *MockSettingPathService) {
-				m.On("GetSettingPath", fixedPath).Return([]models.SettingExcelData{
+				m.On("GetSettingPath", mock.Anything).Return([]models.SettingExcelData{
 					{Path: "test/path", Name: "Test"},
 				}, nil)
 			},
@@ -139,7 +137,7 @@ func TestGetSettingPath(t *testing.T) {
 		{
 			name: "service error",
 			setupMock: func(m *MockSettingPathService) {
-				m.On("GetSettingPath", fixedPath).Return(nil, assert.AnError)
+				m.On("GetSettingPath", mock.Anything).Return(nil, assert.AnError)
 			},
 			expectedStatus: 500,
 			expectedError:  "Failed to get setting path: " + assert.AnError.Error(),
