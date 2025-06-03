@@ -32,7 +32,6 @@ func NewHandler() IHandler {
 // @Tags purchaseorders
 // @Accept json
 // @Produce json
-// @Param job_id_no query string false "Filter orders by Job ID No"
 // @Param path query string false "Path to the Excel file"
 // @Success 200 {object} map[string][]models.PurchaseOrder
 // @Failure 500 {object} map[string]string
@@ -79,11 +78,8 @@ func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 		}
 	}
 
-	// Get job_id_no filter from query parameters
-	jobIDNo := c.Query("job_id_no")
-
-	// Pass the file path and filter to the service
-	orders, err := h.NetworkPathService.GetOrdersFromPath(filePath, jobIDNo)
+	// Pass the file path to the service - no filtering, get all orders
+	orders, err := h.NetworkPathService.GetOrdersFromPath(filePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -103,7 +99,7 @@ func (h *Handler) GetOrdersFromNetworkPath(c *gin.Context) {
 // @Router /purchaseorders/setting [get]
 func (h *Handler) GetSettingPath(c *gin.Context) {
 	// Use a fixed path for settings
-	filePath := `C:\Users\sooo\Desktop\Excel\setting\setting.xlsx`
+	filePath := ``
 
 	settings, err := h.SettingPathService.GetSettingPath(filePath)
 	if err != nil {

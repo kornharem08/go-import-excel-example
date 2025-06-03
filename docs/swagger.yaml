@@ -12,11 +12,11 @@ definitions:
         type: string
       ordered:
         type: integer
-      payment_term:
-        type: string
       po:
         type: string
       po_date:
+        type: string
+      po_receive_date:
         type: string
       pr:
         type: string
@@ -28,15 +28,23 @@ definitions:
         type: string
       project_manager:
         type: string
+      purchasing:
+        type: string
       received:
         type: integer
+      received_date:
+        type: string
       remain:
         type: integer
+      remark:
+        type: string
       request_date:
         type: string
       sales_team:
         type: string
       status:
+        type: string
+      stock_picking_out_date:
         type: string
       type:
         type: string
@@ -61,10 +69,6 @@ paths:
       description: Retrieves purchase order data from an Excel file located on a fixed
         network share path
       parameters:
-      - description: Filter orders by Job ID No
-        in: query
-        name: job_id_no
-        type: string
       - description: Path to the Excel file
         in: query
         name: path

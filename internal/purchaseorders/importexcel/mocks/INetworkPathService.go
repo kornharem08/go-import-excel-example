@@ -13,9 +13,9 @@ type INetworkPathService struct {
 	mock.Mock
 }
 
-// GetOrdersFromPath provides a mock function with given fields: filePath, jobIDNo
-func (_m *INetworkPathService) GetOrdersFromPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error) {
-	ret := _m.Called(filePath, jobIDNo)
+// GetOrdersFromPath provides a mock function with given fields: filePath
+func (_m *INetworkPathService) GetOrdersFromPath(filePath string) ([]models.PurchaseOrder, error) {
+	ret := _m.Called(filePath)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetOrdersFromPath")
@@ -23,19 +23,19 @@ func (_m *INetworkPathService) GetOrdersFromPath(filePath string, jobIDNo string
 
 	var r0 []models.PurchaseOrder
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string, string) ([]models.PurchaseOrder, error)); ok {
-		return rf(filePath, jobIDNo)
+	if rf, ok := ret.Get(0).(func(string) ([]models.PurchaseOrder, error)); ok {
+		return rf(filePath)
 	}
-	if rf, ok := ret.Get(0).(func(string, string) []models.PurchaseOrder); ok {
-		r0 = rf(filePath, jobIDNo)
+	if rf, ok := ret.Get(0).(func(string) []models.PurchaseOrder); ok {
+		r0 = rf(filePath)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]models.PurchaseOrder)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string, string) error); ok {
-		r1 = rf(filePath, jobIDNo)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(filePath)
 	} else {
 		r1 = ret.Error(1)
 	}

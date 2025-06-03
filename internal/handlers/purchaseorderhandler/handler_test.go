@@ -30,8 +30,8 @@ func (m *MockSettingPathService) GetSettingPath(filePath string) ([]models.Setti
 	return args.Get(0).([]models.SettingExcelData), args.Error(1)
 }
 
-func (m *MockNetworkPathService) GetOrdersFromPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error) {
-	args := m.Called(filePath, jobIDNo)
+func (m *MockNetworkPathService) GetOrdersFromPath(filePath string) ([]models.PurchaseOrder, error) {
+	args := m.Called(filePath)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
@@ -56,14 +56,14 @@ func TestGetOrdersFromNetworkPath(t *testing.T) {
 		{
 			name: "successful read from original file",
 			setupMock: func(m *MockNetworkPathService) {
-				m.On("GetOrdersFromPath", mock.Anything, "").Return([]models.PurchaseOrder{}, nil)
+				m.On("GetOrdersFromPath", mock.Anything).Return([]models.PurchaseOrder{}, nil)
 			},
 			expectedStatus: 200,
 		},
 		{
 			name: "service error",
 			setupMock: func(m *MockNetworkPathService) {
-				m.On("GetOrdersFromPath", mock.Anything, "").Return(nil, assert.AnError)
+				m.On("GetOrdersFromPath", mock.Anything).Return(nil, assert.AnError)
 			},
 			expectedStatus: 500,
 			expectedError:  assert.AnError.Error(),

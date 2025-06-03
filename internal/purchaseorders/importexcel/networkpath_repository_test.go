@@ -36,7 +36,6 @@ func TestNetworkPathRepository_GetOrdersFromNetworkPath(t *testing.T) {
 		PO:                 utils.StringOrNil("PO123"),
 		PODate:             utils.StringOrNil("2024-01-15"),
 		Distribution:       utils.StringOrNil("Dept1"),
-		PaymentTerm:        utils.StringOrNil("Net 30"),
 		RequestDate:        utils.StringOrNil("2024-01-01"),
 		DeliveryDate:       utils.StringOrNil("2024-06-30"),
 		Status:             utils.StringOrNil("Active"),
@@ -58,7 +57,6 @@ func TestNetworkPathRepository_GetOrdersFromNetworkPath(t *testing.T) {
 		PO:                 utils.StringOrNil("PO456"),
 		PODate:             utils.StringOrNil("2024-02-15"),
 		Distribution:       utils.StringOrNil("Dept2"),
-		PaymentTerm:        utils.StringOrNil("Net 45"),
 		RequestDate:        utils.StringOrNil("2024-02-01"),
 		DeliveryDate:       utils.StringOrNil("2024-07-30"),
 		Status:             utils.StringOrNil("Active"),
@@ -97,42 +95,36 @@ func TestNetworkPathRepository_GetOrdersFromNetworkPath(t *testing.T) {
 	tests := []struct {
 		name           string
 		filePath       string
-		jobIDNo        string
 		expectedOrders []models.PurchaseOrder
 		expectedError  error
 	}{
 		{
-			name:           "successful retrieval with no filter",
+			name:           "successful retrieval from file with single order",
 			filePath:       filepath.Join(tempDir, "test1.xlsx"),
-			jobIDNo:        "",
 			expectedOrders: []models.PurchaseOrder{testOrder1},
 			expectedError:  nil,
 		},
 		{
-			name:           "successful retrieval with job_id_no filter",
+			name:           "successful retrieval from file with multiple orders",
 			filePath:       filepath.Join(tempDir, "test2.xlsx"),
-			jobIDNo:        "123",
-			expectedOrders: []models.PurchaseOrder{testOrder1},
+			expectedOrders: []models.PurchaseOrder{testOrder1, testOrder2},
 			expectedError:  nil,
 		},
 		{
 			name:           "file not found error",
 			filePath:       filepath.Join(tempDir, "nonexistent.xlsx"),
-			jobIDNo:        "",
 			expectedOrders: nil,
 			expectedError:  fmt.Errorf("failed to open Excel file"),
 		},
 		{
 			name:           "invalid excel file format",
 			filePath:       filepath.Join(tempDir, "invalid.xlsx"),
-			jobIDNo:        "",
 			expectedOrders: nil,
 			expectedError:  fmt.Errorf("failed to open Excel file"),
 		},
 		{
 			name:           "empty excel file",
 			filePath:       filepath.Join(tempDir, "empty.xlsx"),
-			jobIDNo:        "",
 			expectedOrders: []models.PurchaseOrder{},
 			expectedError:  nil,
 		},
@@ -141,7 +133,7 @@ func TestNetworkPathRepository_GetOrdersFromNetworkPath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Call the method using mock repository
-			orders, err := mockRepo.GetOrdersFromNetworkPath(tt.filePath, tt.jobIDNo)
+			orders, err := mockRepo.GetOrdersFromNetworkPath(tt.filePath)
 
 			// Assert results
 			if tt.expectedError != nil {
@@ -171,20 +163,10 @@ func NewMockNetworkPathRepository(testCases map[string]struct {
 	return &MockNetworkPathRepository{testCases: testCases}
 }
 
-func (m *MockNetworkPathRepository) GetOrdersFromNetworkPath(filePath string, jobIDNo string) ([]models.PurchaseOrder, error) {
+func (m *MockNetworkPathRepository) GetOrdersFromNetworkPath(filePath string) ([]models.PurchaseOrder, error) {
 	// Extract test case key from filePath - last part of path
 	key := filepath.Base(filePath)
 	if tc, ok := m.testCases[key]; ok {
-		// If jobIDNo is provided, filter the results
-		if jobIDNo != "" && tc.orders != nil {
-			var filtered []models.PurchaseOrder
-			for _, order := range tc.orders {
-				if order.JobIDNo != nil && *order.JobIDNo == jobIDNo {
-					filtered = append(filtered, order)
-				}
-			}
-			return filtered, tc.err
-		}
 		return tc.orders, tc.err
 	}
 	return nil, fmt.Errorf("no test case for file: %s", filePath)

@@ -40,12 +40,6 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Filter orders by Job ID No",
-                        "name": "job_id_no",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
                         "description": "Path to the Excel file",
                         "name": "path",
                         "in": "query"
@@ -131,13 +125,13 @@ const docTemplate = `{
                 "ordered": {
                     "type": "integer"
                 },
-                "payment_term": {
-                    "type": "string"
-                },
                 "po": {
                     "type": "string"
                 },
                 "po_date": {
+                    "type": "string"
+                },
+                "po_receive_date": {
                     "type": "string"
                 },
                 "pr": {
@@ -155,11 +149,20 @@ const docTemplate = `{
                 "project_manager": {
                     "type": "string"
                 },
+                "purchasing": {
+                    "type": "string"
+                },
                 "received": {
                     "type": "integer"
                 },
+                "received_date": {
+                    "type": "string"
+                },
                 "remain": {
                     "type": "integer"
+                },
+                "remark": {
+                    "type": "string"
                 },
                 "request_date": {
                     "type": "string"
@@ -168,6 +171,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "stock_picking_out_date": {
                     "type": "string"
                 },
                 "type": {
